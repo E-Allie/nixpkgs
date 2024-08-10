@@ -1,5 +1,6 @@
 { lib
 , stdenv
+, addDriverRunpath
 , boost
 , fetchFromGitHub
 , git
@@ -44,6 +45,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   postInstall = ''
     wrapProgram "$out/bin/tuxclockerd" \
+      --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [ addDriverRunpath.driverLink ]}" \
       --prefix "TEXTDOMAINDIR" : "${tuxclocker-plugins}/share/locale" \
       --prefix "TUXCLOCKER_PLUGIN_PATH" : "${tuxclocker-plugins}/lib/tuxclocker/plugins" \
       --prefix "PYTHONPATH" : "${python3.pkgs.hwdata}/${python3.sitePackages}"
